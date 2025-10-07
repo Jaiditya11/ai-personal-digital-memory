@@ -9,4 +9,4 @@ def test_ingest():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "stored"
-    assert "count" in data
+    assert "id" in data 
