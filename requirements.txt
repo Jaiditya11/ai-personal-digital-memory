@@ -4,3 +4,5 @@ pytest
 httpx
 chromadb
 sentence-transformers
+notion-client
+python-dotenv

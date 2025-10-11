@@ -13,7 +13,20 @@ def generate_answer(context: list[str], question: str) -> str:
 
     # 2️⃣  Combine top documents into one text block
     context_text = "\n".join(context[:3]) if context else "No context found."
-    prompt = f"Context:\n{context_text}\n\nQuestion: {question}\n\nAnswer concisely:"
+    prompt = f"""
+You are an intelligent personal assistant. 
+Use the context below to give a helpful, detailed answer to the user's question.
+
+Context:
+{context_text}
+
+User Question: {question}
+
+If the question is about a topic, explain it using the context.
+If the context just contains related notes, summarize or list them meaningfully.
+Answer clearly:
+"""
+
 
     # 3️⃣  Send request to Ollama REST API
     try:
