@@ -3,6 +3,7 @@ from app.schemas import IngestRequest
 from app.db import collection
 import uuid
 from app.llm import generate_answer
+from app.notion_client import fetch_notion_tasks
 
 app = FastAPI(title="AI Personal Digital Memory API")
 
@@ -61,3 +62,25 @@ def query_tasks(q: str, top_k: int = 3):
 
     paired_results = list(zip(docs, metas))
     return {"query": q, "results": paired_results, "answer": answer}
+
+
+@app.post("/sync-notion")
+def sync_notion():
+    """
+    Pulls tasks from Notion DB and ingests them into Chroma.
+    """
+    tasks = fetch_notion_tasks()
+    for t in tasks:
+        task_id = str(uuid.uuid4())
+        tags_str = ", ".join(t["tags"]) if t["tags"] else ""
+        metadata = {"source": t["source"]}
+        if tags_str:
+            metadata["tags"] = tags_str
+
+        collection.add(
+            ids=[task_id],
+            documents=[t["text"]],
+            metadatas=[metadata],
+        )
+
+    return {"status": "ok", "imported": len(tasks)}
