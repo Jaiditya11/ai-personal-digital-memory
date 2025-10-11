@@ -26,11 +26,13 @@ sequenceDiagram
     Chroma-->>API: {"documents":[["Revise DSA Topics"]], "metadatas":[[{"source":"notion"}]]}
 
     API->>Ollama: POST /api/generate<br/>model=llama3.1:8b<br/>prompt="Context: {docs}\\nQuestion: {q}"
-    Note right of Ollama: LLM reads context + question<br/>Generates concise answer
+    Note right of Ollama: LLM reads context + question<br/>Generates concise natural-language answer
     Ollama-->>API: {"response":"DSA covers data structures and algorithms for coding interviews."}
 
-    API-->>User: JSON Response<br/>{
-        "query": q,
-        "results": [(doc, metadata), ...],
-        "answer": "DSA covers data structures and algorithms..."
+    API-->>User: Returns JSON response
+    Note right of User: {
+      "query": "DSA",
+      "results": [(doc, metadata), ...],
+      "answer": "DSA covers data structures and algorithms..."
     }
+
